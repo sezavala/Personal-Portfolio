@@ -1,7 +1,8 @@
 # 🎨 Personal Portfolio
 
 Welcome to my personal portfolio website repository! This project showcases who I am, what I’ve built, and what I’m passionate about — all in one place.
-You can visit my deployed site at https://sergiozavala.tech/
+
+🌐 **Live Site**: [sergiozavala.tech](https://sergiozavala.tech/)
 
 ## 👤 About Me
 
@@ -48,12 +49,6 @@ Personal-Portfolio/
 - Admin authentication system  
 - Playlist/blog entry management (CRUD)  
 - Clean, modular structure for scalability  
-
----
-
-## 📸 Screenshots
-
-_Add screenshots here once available, such as_ `public/images/screenshot-home.png`.
 
 ---
 
