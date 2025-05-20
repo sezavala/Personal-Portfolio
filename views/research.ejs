@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Research Experience</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #121212;
+        color: #f5f5f5;
+        font-family: "Roboto", sans-serif;
+        margin: 0;
+      }
+
+      .navbar-desktop {
+        display: none;
+      }
+
+      @media (min-width: 769px) {
+        .navbar-desktop {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 30px;
+          background-color: rgba(0, 0, 0, 0.95);
+          padding: 12px 0;
+          position: sticky;
+          top: 0;
+          z-index: 1050;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .navbar-desktop a {
+          color: #f5f5f5;
+          font-size: 1.1rem;
+          font-weight: 500;
+          text-decoration: none;
+          transition: color 0.3s ease;
+        }
+
+        .navbar-desktop a:hover {
+          color: #ffc107;
+        }
+      }
+
+      header {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+          url("/images/cinematic-bg.jpg") center/cover no-repeat;
+        color: #f5f5f5;
+        padding: 100px 20px;
+        text-align: center;
+        box-shadow: inset 0 -10px 30px rgba(0, 0, 0, 0.6);
+      }
+
+      header h1 {
+        font-size: 3rem;
+        font-weight: bold;
+        text-shadow: 2px 2px 8px rgba(255, 152, 0, 0.4);
+      }
+
+      a {
+        color: #ff9800;
+        text-decoration: none;
+      }
+
+      a:hover {
+        color: #ffc107;
+        text-decoration: underline;
+      }
+
+      .research-container {
+        padding: 60px 15px;
+      }
+
+      .research-card {
+        background-color: #1a1a1a;
+        border-left: 4px solid #ff9800;
+        padding: 30px;
+        margin-bottom: 40px;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+        animation: fadeInUp 1s ease forwards;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      .research-card h3 {
+        color: #ffc107;
+        font-size: 1.6rem;
+        margin-bottom: 10px;
+      }
+
+      .research-card h5 {
+        color: #bbb;
+        font-weight: 400;
+        margin-bottom: 15px;
+      }
+
+      .research-card p {
+        line-height: 1.7;
+        font-size: 1.05rem;
+        color: #ddd;
+      }
+      .research-card img {
+        display: block;
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        margin: 15px auto;
+        border-radius: 8px;
+      }
+
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .footer {
+        background-color: #1a1a1a;
+        color: #f5f5f5;
+        text-align: center;
+        padding: 20px 0;
+        font-size: 0.95rem;
+        border-top: 1px solid #2a2a2a;
+        letter-spacing: 0.5px;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.6);
+      }
+
+      /* Hamburger */
+      .hamburger {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        .hamburger {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          width: 40px;
+          height: 30px;
+          background: none;
+          border: none;
+          cursor: pointer;
+          z-index: 1100;
+          position: fixed;
+          top: 20px;
+          right: 20px;
+        }
+
+        .hamburger div {
+          width: 100%;
+          height: 4px;
+          background: #ff9800;
+          border-radius: 5px;
+          transition: all 0.3s ease;
+        }
+      }
+
+      .hamburger.active div:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+
+      .hamburger.active div:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger.active div:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+
+      nav {
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(10px);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        transition: all 0.3s ease;
+      }
+
+      nav.nav-active {
+        display: flex;
+      }
+
+      nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        text-align: center;
+      }
+
+      nav ul li {
+        margin: 15px 0;
+      }
+
+      nav ul li a {
+        color: #f5f5f5;
+        font-size: 1.5rem;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      nav ul li a:hover {
+        color: #ffc107;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Desktop Navbar -->
+    <%- include('partials/navbar.ejs') %>
+
+    <!-- Header -->
+    <header>
+      <h1>Research Experience</h1>
+      <p>Diving into data. Discovering new worlds.</p>
+    </header>
+
+    <!-- Hamburger Menu for Mobile -->
+    <button class="hamburger" aria-label="Toggle navigation">
+      <div></div>
+      <div></div>
+      <div></div>
+    </button>
+
+    <!-- Mobile Navigation -->
+    <%- include('partials/mobile_nav.ejs') %>
+
+    <!-- Main Research Section -->
+    <main class="container research-container">
+      <div class="research-card">
+        <h3>
+          Mapping Transcripts through Pangenome Graphs
+          <strong>(Potential Project)</strong>
+        </h3>
+        <h5>
+          NIH NHGRI GREAT Scholars Program –
+          <strong>(Expected June 2025)</strong>
+        </h5>
+        <img
+          src="/images/pangenome-graph.jpg"
+          alt="Pangenome graph visual"
+          class="research-img"
+        />
+
+        <p>
+          This upcoming summer, I will be conducting research at UC Santa Cruz
+          under the mentorship of Dr. Benedict Paten. One of my proposed
+          projects involves exploring how pangenome graph structures can be used
+          to more accurately map gene and transcript annotations.
+        </p>
+        <p><strong>Key Skills:</strong> Python and Bash.</p>
+      </div>
+
+      <div class="research-card">
+        <h3>
+          <a target="_blank" href="images/Cure Project.pdf"
+            >Combinatorics: Counting L-Shaped Tableaux</a
+          >
+        </h3>
+        <h5>
+          Course Undergraduate Research Experience | CSU Monterey Bay —
+          <strong>(March – May 2023)</strong>
+        </h5>
+        <img
+          src="/images/tableaux.png"
+          alt="Research project placeholder image"
+          class="research-img"
+        />
+        <p>
+          As part of the MATH 170 (Discrete Mathematics) course, I collaborated
+          with an undergraduate team under the guidance of Professor Lipika Deka
+          to investigate the number of standard Young Tableaux of L-shape with a
+          total of <em>n</em> boxes. Our work focused on exploring proof
+          techniques, using combinatorial search libraries, and organizing
+          collaborative research sessions.
+        </p>
+        <p>
+          <strong>Key Skills:</strong> Formal proof writing, discrete math
+          modeling, combinatorics, team-based problem solving, and research time
+          management.
+        </p>
+      </div>
+    </main>
+
+    <%- include('partials/footer') %>
+
+    <!-- Script for Hamburger -->
+    <script>
+      const hamburger = document.querySelector(".hamburger");
+      const nav = document.querySelector("nav");
+
+      hamburger.addEventListener("click", () => {
+        hamburger.classList.toggle("active");
+        nav.classList.toggle("nav-active");
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,20 @@
+<div class="navbar-desktop">
+  <a href="/">Home</a>
+  <a href="/about">About</a>
+  <a href="/cv">CV</a>
+  <a href="/research">Research</a>
+  <a href="/experience">Experiences</a>
+  <a href="/project">Projects</a>
+  <a href="/blog">Blog</a>
+  <% if (isAuthenticated) { %>
+  <form action="/admin/logout" method="GET" style="display: inline">
+    <button
+      type="submit"
+      class="btn btn-link"
+      style="color: #ffc107; text-decoration: none; font-weight: 500"
+    >
+      Logout
+    </button>
+  </form>
+  <% } %>
+</div>
