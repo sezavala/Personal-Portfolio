@@ -39,5 +39,5 @@ Thumbs.db
 # Build output
 dist/
 build/
-/images/
-/videos/
+# Ignore all images inside public/images
+/public/images/*
