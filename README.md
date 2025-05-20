@@ -22,14 +22,23 @@ I'm **Sergio Zavala**, a Computer Science undergraduate at CSU Monterey Bay. I�
 
 ## 📁 Project Structure
 Personal-Portfolio/
+
 ├── public/
+
 │ └── images/
+
 ├── views/
+
 │ ├── partials/
+
 │ └── *.ejs
+
 ├── index.mjs
+
 ├── .gitignore
+
 ├── package.json
+
 └── README.md
 
 ## 💡 Features
