@@ -129,6 +129,7 @@ app.post("/addPlaylist", isAuthenticated, async (req, res) => {
   try {
     const title = req.body.title;
     const description = req.body.description;
+    const imageUrl = req.body.image;
     const adminId = req.session.adminId;
     if (title.length < 3) {
       return res.render("addPlaylist", { error: "Title too short" });
@@ -136,8 +137,8 @@ app.post("/addPlaylist", isAuthenticated, async (req, res) => {
       return res.render("addPlaylist", { error: "Description too short" });
     }
     const curr = new Date();
-    let sql = `INSERT INTO playlist (title, description, createdAt, adminId) VALUES (?,?,?,?)`;
-    let sqlParam = [title, description, curr, adminId];
+    let sql = `INSERT INTO playlist (title, description, createdAt, adminId, imageURL) VALUES (?,?,?,?,?)`;
+    let sqlParam = [title, description, curr, adminId, imageUrl];
     await conn.query(sql, sqlParam);
     res.redirect("/blog");
   } catch (error) {

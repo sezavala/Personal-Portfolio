@@ -56,7 +56,6 @@
         text-align: center;
         box-shadow: inset 0 -10px 30px rgba(0, 0, 0, 0.6);
       }
-
       header h1 {
         font-size: 3rem;
         font-weight: bold;
@@ -93,6 +92,7 @@
         transform: translateY(-6px) scale(1.025);
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.85);
         border-color: #ffc107;
+        cursor: pointer;
       }
       .playlist h3 {
         color: #ffc107;
@@ -302,14 +302,18 @@
         <div class="playlist-actions">
           <a
             title="Delete Playlist"
-            href="/deletePlaylist?playlistId=<%= playlist.playlistId %>"
+            href="#"
+            class="delete-link"
+            data-playlist-id="<%= playlist.playlistId %>"
             style="color: #ffc107; font-size: 1.2em; text-decoration: none"
             >&#128465;</a
           >
         </div>
         <% } %>
         <h3><%= playlist.title %></h3>
+        <% if (playlist.imageURL) { %>
         <img style="width: 100%" src="<%= playlist.imageURL %>" alt="" />
+        <% } %>
         <p>Created by: <%= playlist.firstName %> <%= playlist.lastName %></p>
         <p><%= playlist.createdAt %></p>
         <p><%= playlist.description %></p>
@@ -319,12 +323,72 @@
       <% } %>
     </main>
     <%- include('partials/footer') %>
+
+    <!-- Delete Confirmation Modal -->
+    <div
+      class="modal fade"
+      id="deleteConfirmModal"
+      tabindex="-1"
+      aria-labelledby="deleteConfirmLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background: #232323; color: #fff">
+          <div class="modal-header border-0">
+            <h5
+              class="modal-title"
+              id="deleteConfirmLabel"
+              style="color: #ffc107"
+            >
+              Confirm Delete
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete this playlist? This action cannot be
+            undone.
+          </div>
+          <div class="modal-footer border-0">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Delete</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+      // Hamburger menu logic
       const hamburger = document.querySelector(".hamburger");
       const nav = document.querySelector("nav");
       hamburger.addEventListener("click", () => {
         hamburger.classList.toggle("active");
         nav.classList.toggle("nav-active");
+      });
+
+      // Delete modal logic
+      document.querySelectorAll(".delete-link").forEach((link) => {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          const playlistId = this.getAttribute("data-playlist-id");
+          const confirmBtn = document.getElementById("confirmDeleteBtn");
+          confirmBtn.href = `/deletePlaylist?playlistId=${playlistId}`;
+          const modal = new bootstrap.Modal(
+            document.getElementById("deleteConfirmModal")
+          );
+          modal.show();
+        });
       });
     </script>
   </body>
