@@ -199,7 +199,7 @@
     <%- include('partials/mobile_nav.ejs') %>
     <main>
       <div class="add-container">
-        <a href="/blog" class="back-link">&larr; Back to Blog</a>
+        <a class="back-link" href="javascript:history.back()">&larr; Go Back</a>
         <h2>Add New Playlist</h2>
         <form method="POST" action="/addPlaylist">
           <div class="mb-3">

@@ -103,6 +103,129 @@ app.get("/blog", async (req, res) => {
   res.render("blog", { playlists });
 });
 
+app.get("/addBlogPost", isAuthenticated, async (req, res) => {
+  const playlistId = req.query.playlistId;
+  res.render("addBlogPost", { playlistId });
+});
+app.post("/addBlogPost", isAuthenticated, async (req, res) => {
+  try {
+    const {
+      title,
+      slug,
+      summary,
+      thumbnail,
+      metaTitle,
+      metaDescription,
+      content,
+      publish,
+    } = req.body;
+
+    const playlistId = req.body.playlistId;
+    const adminId = req.session.adminId;
+    const createdAt = new Date();
+    const published = publish === "1" ? 1 : 0;
+    const publishedAt = published ? new Date() : null;
+
+    if (title.length < 10) {
+      return res.render("addBlogPost", {
+        error: "Title too short",
+        playlistId,
+      });
+    } else if (summary.length < 20) {
+      return res.render("addBlogPost", {
+        error: "Summary too short",
+        playlistId,
+      });
+    }
+
+    const sql = `
+  INSERT INTO blogPost (
+    title, slug, summary, content, thumbnail,
+    metaTitle, metaDescription, published, publishedAt,
+    adminId, playlistId, readTime, views, createdAt
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`;
+
+    const readTime = Math.ceil(content.split(/\s+/).length / 200);
+    const views = 0;
+
+    const params = [
+      title,
+      slug,
+      summary,
+      content,
+      thumbnail,
+      metaTitle || title,
+      metaDescription || summary.slice(0, 160),
+      published,
+      publishedAt,
+      adminId,
+      playlistId || null,
+      readTime,
+      views,
+      createdAt,
+    ];
+
+    await conn.query(sql, params);
+    res.redirect("/viewBlogs?playlistId=" + playlistId);
+  } catch (error) {
+    console.error("Error in /addBlogPost route:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/viewBlogs", async (req, res) => {
+  const playlistId = req.query.playlistId;
+  let sql;
+  let params;
+  if (req.session.userAuthenticated) {
+    sql = `SELECT * FROM blogPost NATURAL JOIN admin WHERE playlistId = ? ORDER BY publishedAt DESC`;
+    params = [playlistId];
+  } else {
+    sql = `SELECT * FROM blogPost NATURAL JOIN admin WHERE playlistId = ? AND published = 1 ORDER BY publishedAt DESC`;
+    params = [playlistId];
+  }
+  const [blogs] = await conn.query(sql, params);
+  res.render("blogPosts", {
+    blogs,
+    playlistId,
+    isAuthenticated: req.session && req.session.userAuthenticated,
+  });
+});
+
+app.get("/blogPost/:slug", async (req, res) => {
+  const slug = req.params.slug;
+  // Increment views
+  await conn.query("UPDATE blogPost SET views = views + 1 WHERE slug = ?", [
+    slug,
+  ]);
+  // Fetch blog post
+  const [rows] = await conn.query(
+    "SELECT * FROM blogPost NATURAL JOIN admin WHERE slug = ?",
+    [slug]
+  );
+  const blog = rows[0];
+  res.render("post", { blog });
+});
+
+app.get("/deleteBlog", isAuthenticated, async (req, res) => {
+  try {
+    const blogId = req.query.blogId;
+
+    if (!blogId) {
+      return res.status(400).send("Blog ID is required");
+    }
+
+    const sql = `DELETE FROM blogPost WHERE blogId = ?`;
+    await conn.query(sql, [blogId]);
+
+    res.sendStatus(200);
+  } catch (error) {
+    console.error("Error in /deleteBlog route:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 app.get("/deletePlaylist", isAuthenticated, async (req, res) => {
   try {
     const playlistId = req.query.playlistId;
@@ -114,7 +237,7 @@ app.get("/deletePlaylist", isAuthenticated, async (req, res) => {
     const sql = `DELETE FROM playlist WHERE playlistId = ?`;
     await conn.query(sql, [playlistId]);
 
-    res.redirect("/blog");
+    res.sendStatus(200);
   } catch (error) {
     console.error("Error in /deletePlaylist route:", error);
     res.status(500).send("Internal Server Error");
