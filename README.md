@@ -22,25 +22,19 @@ I'm **Sergio Zavala**, a Computer Science undergraduate at CSU Monterey Bay. I�
 - **Version Control**: Git & GitHub
 
 ## 📁 Project Structure
+
+```
 Personal-Portfolio/
-
 ├── public/
-
-│ └── images/
-
+│   └── images/
 ├── views/
-
-│ ├── partials/
-
-│ └── *.ejs
-
+│   ├── partials/
+│   └── *.ejs
 ├── index.mjs
-
 ├── .gitignore
-
 ├── package.json
-
 └── README.md
+```
 
 ## 💡 Features
 
@@ -49,12 +43,22 @@ Personal-Portfolio/
 - Admin authentication system  
 - Playlist/blog entry management (CRUD)  
 - Clean, modular structure for scalability  
+- Blog post drafts and publishing workflow  
+- Secure session-based admin dashboard  
+- Mobile-friendly navigation and UI  
+- Image uploads for blog content (Cloudinary integration)  
 
 ---
 
 ## 🧾 License
 
 This project is licensed under the **MIT License**.
+
+---
+
+## Images
+
+<img width="1512" alt="Screenshot 2025-05-23 at 4 45 58 PM" src="https://github.com/user-attachments/assets/e2cda123-7f84-4e2f-a51d-67a22ac1609d" />
 
 ---
 
