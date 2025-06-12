@@ -262,7 +262,17 @@
       %>
       <div class="blog-card mt-5">
         <% if (isAuthenticated) { %>
-        <div class="playlist-actions">
+        <div class="playlist-actions" style="display: flex; gap: 10px">
+          <!-- Edit button for drafts -->
+          <% if (blog.published === 0) { %>
+          <a
+            title="Edit Draft"
+            href="/editBlogPost/<%= blog.blogId %>?playlistId=<%= playlistId %>"
+            class="btn btn-sm btn-outline-warning"
+            style="margin-right: 8px"
+            >Edit</a
+          >
+          <% } %>
           <a
             title="Delete Blog"
             href="#"

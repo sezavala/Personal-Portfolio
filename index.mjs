@@ -270,6 +270,131 @@ app.post("/addPlaylist", isAuthenticated, async (req, res) => {
   }
 });
 
+app.get("/editBlogPost/:blogId", isAuthenticated, async (req, res) => {
+  const blogId = req.params.blogId;
+  const playlistId = req.query.playlistId;
+  const [rows] = await conn.query("SELECT * FROM blogPost WHERE blogId = ?", [
+    blogId,
+  ]);
+  if (!rows.length) {
+    return res.status(404).send("Blog post not found");
+  }
+  res.render("addBlogPost", {
+    ...rows[0],
+    playlistId,
+    error: undefined, // clear error
+  });
+});
+
+app.post("/editBlogPost/:blogId", isAuthenticated, async (req, res) => {
+  try {
+    const blogId = req.params.blogId;
+    const {
+      title,
+      slug,
+      summary,
+      thumbnail,
+      metaTitle,
+      metaDescription,
+      content,
+      publish,
+    } = req.body;
+
+    const playlistId = req.body.playlistId;
+    const published = publish === "1" ? 1 : 0;
+    const publishedAt = published ? new Date() : null;
+    const readTime = Math.ceil(content.split(/\s+/).length / 200);
+
+    if (title.length < 10) {
+      return res.render("addBlogPost", {
+        error: "Title too short",
+        ...req.body,
+        playlistId,
+      });
+    } else if (summary.length < 20) {
+      return res.render("addBlogPost", {
+        error: "Summary too short",
+        ...req.body,
+        playlistId,
+      });
+    }
+
+    const sql = `
+      UPDATE blogPost SET
+        title = ?, slug = ?, summary = ?, content = ?, thumbnail = ?,
+        metaTitle = ?, metaDescription = ?, published = ?, publishedAt = ?,
+        playlistId = ?, readTime = ?
+      WHERE blogId = ?
+    `;
+    const params = [
+      title,
+      slug,
+      summary,
+      content,
+      thumbnail,
+      metaTitle || title,
+      metaDescription || summary.slice(0, 160),
+      published,
+      publishedAt,
+      playlistId || null,
+      readTime,
+      blogId,
+    ];
+
+    await conn.query(sql, params);
+    res.redirect("/viewBlogs?playlistId=" + playlistId);
+  } catch (error) {
+    console.error("Error in /editBlogPost route:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get("/editPlaylist/:playlistId", isAuthenticated, async (req, res) => {
+  const playlistId = req.params.playlistId;
+  const [rows] = await conn.query(
+    "SELECT * FROM playlist WHERE playlistId = ?",
+    [playlistId]
+  );
+  if (!rows.length) {
+    return res.status(404).send("Playlist not found");
+  }
+  res.render("addPlaylist", {
+    ...rows[0],
+    error: undefined,
+    isEdit: true,
+  });
+});
+
+app.post("/editPlaylist/:playlistId", isAuthenticated, async (req, res) => {
+  try {
+    const playlistId = req.params.playlistId;
+    const { title, description, image } = req.body;
+    if (title.length < 3) {
+      return res.render("addPlaylist", {
+        error: "Title too short",
+        ...req.body,
+        isEdit: true,
+      });
+    } else if (description.length < 10) {
+      return res.render("addPlaylist", {
+        error: "Description too short",
+        ...req.body,
+        isEdit: true,
+      });
+    }
+    const sql = `
+      UPDATE playlist
+      SET title = ?, description = ?, imageURL = ?
+      WHERE playlistId = ?
+    `;
+    await conn.query(sql, [title, description, image, playlistId]);
+    res.redirect("/blog");
+  } catch (error) {
+    console.error("Error in /editPlaylist route:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 // Start server
 app.listen(3000, () => {
   console.log("server started");

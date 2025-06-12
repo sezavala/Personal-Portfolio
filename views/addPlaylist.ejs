@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add Playlist</title>
+    <title>
+      <%= typeof playlistId !== 'undefined' ? 'Edit Playlist' : 'Add Playlist' %>
+    </title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -189,7 +191,9 @@
   <body>
     <%- include('partials/navbar.ejs') %>
     <header>
-      <h1>Add Playlist</h1>
+      <h1>
+        <%= typeof playlistId !== 'undefined' ? 'Edit Playlist' : 'Add Playlist' %>
+      </h1>
     </header>
     <button class="hamburger" aria-label="Toggle navigation">
       <div></div>
@@ -200,8 +204,13 @@
     <main>
       <div class="add-container">
         <a class="back-link" href="javascript:history.back()">&larr; Go Back</a>
-        <h2>Add New Playlist</h2>
-        <form method="POST" action="/addPlaylist">
+        <h2>
+          <%= typeof playlistId !== 'undefined' ? 'Edit Playlist' : 'Add New Playlist' %>
+        </h2>
+        <form
+          method="POST"
+          action="<%= typeof playlistId !== 'undefined' ? '/editPlaylist/' + playlistId : '/addPlaylist' %>"
+        >
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input
@@ -211,18 +220,12 @@
               name="title"
               required
               maxlength="100"
+              value="<%= typeof title !== 'undefined' ? title : '' %>"
             />
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">Description</label>
-            <textarea
-              class="form-control"
-              id="description"
-              name="description"
-              rows="4"
-              maxlength="1000"
-              required
-            ></textarea>
+            <textarea class="form-control" id="description" name="description" rows="4" maxlength="1000" required><%= typeof description !== 'undefined' ? description : '' %></textarea>
           </div>
           <div class="mb-3">
             <label for="image" class="form-label">Image URL</label>
@@ -233,10 +236,11 @@
               name="image"
               required
               maxlength="300"
+              value="<%= typeof imageURL !== 'undefined' ? imageURL : '' %>"
             />
           </div>
           <button type="submit" class="btn btn-warning mt-3">
-            Add Playlist
+            <%= typeof playlistId !== 'undefined' ? 'Update Playlist' : 'Add Playlist' %>
           </button>
           <% if(typeof(error) != "undefined") { %> <%= error %> <% } %>
         </form>

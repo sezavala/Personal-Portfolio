@@ -4,14 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Blog Post</title>
-    <link
-      href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
     <style>
       body {
         background-color: #121212;
@@ -232,10 +226,15 @@
     <main>
       <div class="add-container">
         <a class="back-link" href="javascript:history.back()">&larr; Go Back</a>
-        <h2>New Blog Post</h2>
-        <form method="POST" action="/addBlogPost" id="blogForm">
+        <h2>
+          <%= typeof blogId !== "undefined" ? "Edit Blog Post" : "New Blog Post" %>
+        </h2>
+        <form method="POST" action="<%= typeof blogId !== "undefined" ? '/editBlogPost/' + blogId : '/addBlogPost' %>" id="blogForm">
           <input type="hidden" name="playlistId" value="<%= playlistId %>" />
-          <input type="hidden" name="publish" id="publish" value="0" />
+          <input type="hidden" name="publish" id="publish" value="<%= typeof published !== 'undefined' ? published : 0 %>" />
+          <% if (typeof blogId !== "undefined") { %>
+            <input type="hidden" name="blogId" value="<%= blogId %>" />
+          <% } %>
           <div class="mb-3">
             <label for="title" class="form-label">Title</label>
             <input
@@ -245,6 +244,7 @@
               name="title"
               required
               maxlength="100"
+              value="<%= typeof title !== 'undefined' ? title : '' %>"
             />
           </div>
           <div class="mb-3">
@@ -256,6 +256,7 @@
               name="slug"
               required
               maxlength="100"
+              value="<%= typeof slug !== 'undefined' ? slug : '' %>"
             />
           </div>
           <div class="mb-3">
@@ -267,7 +268,7 @@
               rows="3"
               maxlength="1000"
               required
-            ></textarea>
+            ><%= typeof summary !== 'undefined' ? summary : '' %></textarea>
           </div>
           <div class="mb-3">
             <label for="thumbnail" class="form-label">Thumbnail URL</label>
@@ -277,12 +278,11 @@
               id="thumbnail"
               name="thumbnail"
               maxlength="300"
+              value="<%= typeof thumbnail !== 'undefined' ? thumbnail : '' %>"
             />
           </div>
           <div class="mb-3">
-            <label for="metaTitle" class="form-label"
-              >Meta Title (optional)</label
-            >
+            <label for="metaTitle" class="form-label">Meta Title (optional)</label>
             <input
               type="text"
               class="form-control"
@@ -290,12 +290,11 @@
               name="metaTitle"
               maxlength="255"
               placeholder="Ex: How I Contributed to Oppia | Open Source Blog"
+              value="<%= typeof metaTitle !== 'undefined' ? metaTitle : '' %>"
             />
           </div>
           <div class="mb-3">
-            <label for="metaDescription" class="form-label"
-              >Meta Description (optional)</label
-            >
+            <label for="metaDescription" class="form-label">Meta Description (optional)</label>
             <textarea
               class="form-control"
               id="metaDescription"
@@ -303,25 +302,27 @@
               rows="3"
               maxlength="300"
               placeholder="Ex: I share how I contributed to Oppia, a global open-source education platform, using Angular, Python, and TypeScript."
-            ></textarea>
+            ><%= typeof metaDescription !== 'undefined' ? metaDescription : '' %></textarea>
           </div>
           <div class="mb-3">
             <label for="editor" class="form-label">Content</label>
             <div id="editor"></div>
-            <input type="hidden" name="content" id="content" />
+            <input type="hidden" name="content" id="content" value="<%= typeof content !== 'undefined' ? content : '' %>" />
           </div>
-          <button
-            type="button"
-            class="btn btn-secondary mt-3"
-            id="saveDraftBtn"
-          >
-            Save Draft
-          </button>
-          <button type="button" class="btn btn-warning mt-3" id="addPostBtn">
-            Add Blog Post
-          </button>
+          <div class="row g-2">
+            <div class="col-12 col-md-6">
+              <button type="button" class="btn btn-secondary mt-3" id="saveDraftBtn">
+                Save Draft
+              </button>
+            </div>
+            <div class="col-12 col-md-6">
+              <button type="button" class="btn btn-warning mt-3" id="addPostBtn">
+                <%= typeof blogId !== "undefined" ? "Update Blog Post" : "Add Blog Post" %>
+              </button>
+            </div>
+          </div>
           <% if(typeof(error) != "undefined") { %>
-          <div class="text-danger mt-2"><%= error %></div>
+            <div class="text-danger mt-2"><%= error %></div>
           <% } %>
         </form>
       </div>
@@ -349,6 +350,11 @@
           ],
         },
       });
+
+      // Set Quill content if editing
+      <% if (typeof content !== "undefined" && content) { %>
+        quill.root.innerHTML = `<%- content.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/<\/script>/gi, '<\\/script>') %>`;
+      <% } %>
 
       const toolbar = quill.getModule("toolbar");
       toolbar.addHandler("image", () => {

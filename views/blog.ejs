@@ -302,6 +302,13 @@
           <% if (isAuthenticated) { %>
           <div class="playlist-actions">
             <a
+              title="Edit Playlist"
+              href="/editPlaylist/<%= playlist.playlistId %>"
+              class="btn btn-sm btn-outline-warning"
+              style="margin-right: 8px"
+              >Edit</a
+            >
+            <a
               title="Delete Playlist"
               href="#"
               class="delete-link"
